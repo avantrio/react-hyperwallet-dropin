@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-export default class ExampleComponent extends Component {
+export default class HyperwalletTranferMethodDropIn extends Component {
   static propTypes = {
     userToken: PropTypes.string,
     environment: PropTypes.oneOf(['sandbox', 'uat', 'production']),

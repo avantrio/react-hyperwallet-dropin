@@ -15,12 +15,19 @@ npm install --save react-hyperwallet-dropin
 ```jsx
 import React, { Component } from 'react'
 
-import MyComponent from 'react-hyperwallet-dropin'
+import HyperwalletTranferMethodDropIn from 'react-hyperwallet-dropin'
 
 class Example extends Component {
   render () {
     return (
-      <MyComponent />
+      <HyperwalletTranferMethodDropIn
+        userToken='unique user identifier prefixed with usr-. generated when creating a user'
+        environment='sandbox'
+        getAuthenticationToken = {(callback)=>{callback('auth-token')}} //token should be renewed every 10 mins
+        onComplete = {(trmObject, completionResult)=>{
+          //logic to be executed on completion of setting up transfer method.
+        }}
+      />
     )
   }
 }
