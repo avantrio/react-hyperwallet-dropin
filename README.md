@@ -29,3 +29,4 @@ class Example extends Component {
 ## License
 
 MIT © [lahiru94](https://github.com/lahiru94)
+# react-hyperwallet-dropin
