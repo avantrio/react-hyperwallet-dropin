@@ -3,45 +3,65 @@ import PropTypes from 'prop-types'
 
 export default class ExampleComponent extends Component {
   static propTypes = {
-    text: PropTypes.string
+    userToken: PropTypes.string,
+    environment: PropTypes.oneOf(['sandbox', 'uat', 'production']),
+    getAuthenticationToken: PropTypes.func,
+    onComplete: PropTypes.func
   }
 
   state = {
-    isSdkReady: false
+    isSdkReady: false,
+    isUILoaded: false
   }
 
   componentDidMount() {
-    this.addPaypalSdk()
+    this._addPaypalSdk()
   }
 
   render() {
-    const {
-      text
-    } = this.props
+    if (this.state.isSdkReady) {
+      window.HWWidgets.initialize(this._getAuthenticationToken)
+    }
 
     return (
       <div>
-        Example Component: {text}
+        {this.state.isUILoaded ? null : 'loading'}
         <div id='TransferMethodUI' />
       </div>
     )
   }
 
-  addPaypalSdk = () => {
+  _addPaypalSdk = () => {
+    const {
+      userToken,
+      environment
+    } = this.props
+
     const script = document.createElement('script')
     script.type = 'text/javascript'
-    script.src = `https://sandbox.hyperwallet.com/rest/widgets/transfer-methods/usr-60765e54-4e77-499e-bf5b-8e55d40d9b2e/en.min.js`
+    script.src = `https://${environment}.hyperwallet.com/rest/widgets/transfer-methods/${userToken}/en.min.js`
     script.async = true
     script.onload = () => {
       this.setState({ isSdkReady: true })
-      window.HWWidgets.initialize((onSuccess, onFailure) => {
-        console.log(onSuccess)
-      })
+      window.HWWidgets.transferMethods.configure({
+        'template': 'plain',
+        'el': document.getElementById('TransferMethodUI'),
+        'onComplete': function (trmObject, completionResult) {
+          this.props.onComplete(trmObject, completionResult)
+        }
+      }).display(function () {
+        // this is a callback event called when display is done
+        this.setState({ isUILoaded: true })
+      }.bind(this))
     }
     script.onerror = () => {
       throw new Error('Hyperwallet SDK could not be loaded.')
     }
 
     document.body.appendChild(script)
+  }
+
+  _getAuthenticationToken = (callback) => {
+    this.props.getAuthenticationToken(callback)
   }
 }
