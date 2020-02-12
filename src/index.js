@@ -34,7 +34,8 @@ export default class HyperwalletTranferMethodDropIn extends Component {
   _addPaypalSdk = () => {
     const {
       userToken,
-      environment
+      environment,
+      onComplete
     } = this.props
 
     const script = document.createElement('script')
@@ -47,7 +48,7 @@ export default class HyperwalletTranferMethodDropIn extends Component {
         'template': 'plain',
         'el': document.getElementById('TransferMethodUI'),
         'onComplete': function (trmObject, completionResult) {
-          this.props.onComplete(trmObject, completionResult)
+          onComplete(trmObject, completionResult)
         }
       }).display(function () {
         // this is a callback event called when display is done
