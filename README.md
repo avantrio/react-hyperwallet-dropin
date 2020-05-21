@@ -1,6 +1,6 @@
 # react-hyperwallet-dropin
 
-> React component to integrate Hyperwallet Drop-In UI
+> React component to integrate Hyperwallet Drop-In UI (Unofficial)
 
 [![NPM](https://img.shields.io/npm/v/react-hyperwallet-dropin.svg)](https://www.npmjs.com/package/react-hyperwallet-dropin) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
@@ -30,7 +30,7 @@ class Example extends Component {
         onError = {() => {
           // handle error
         }}
-        template = 'Specifies the drop-in UI template. Allowed values are:bootstrap3|plain'
+        template = 'bootstrap3'//Specifies the UI template. Allowed values are:[bootstrap3|plain]
       />
     )
   }
