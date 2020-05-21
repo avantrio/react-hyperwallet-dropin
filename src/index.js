@@ -6,12 +6,15 @@ export default class HyperwalletTranferMethodDropIn extends Component {
     userToken: PropTypes.string,
     environment: PropTypes.oneOf(['sandbox', 'uat', 'production']),
     getAuthenticationToken: PropTypes.func,
-    onComplete: PropTypes.func
+    onComplete: PropTypes.func,
+    onError: PropTypes.func,
+    template: PropTypes.string
   }
 
   state = {
     isSdkReady: false,
-    isUILoaded: false
+    isUILoaded: false,
+    isError: false
   }
 
   componentDidMount() {
@@ -24,8 +27,8 @@ export default class HyperwalletTranferMethodDropIn extends Component {
     }
 
     return (
-      <div>
-        {this.state.isUILoaded ? null : 'loading'}
+      <div style={{padding: 20}}>
+        {this.state.isUILoaded ? null : this.state.isError ? 'error occured' : 'loading'}
         <div id='TransferMethodUI' />
       </div>
     )
@@ -35,7 +38,9 @@ export default class HyperwalletTranferMethodDropIn extends Component {
     const {
       userToken,
       environment,
-      onComplete
+      onComplete,
+      template,
+      onError
     } = this.props
 
     const script = document.createElement('script')
@@ -45,7 +50,7 @@ export default class HyperwalletTranferMethodDropIn extends Component {
     script.onload = () => {
       this.setState({ isSdkReady: true })
       window.HWWidgets.transferMethods.configure({
-        'template': 'plain',
+        'template': template || 'plain',
         'el': document.getElementById('TransferMethodUI'),
         'onComplete': function (trmObject, completionResult) {
           onComplete(trmObject, completionResult)
@@ -56,7 +61,8 @@ export default class HyperwalletTranferMethodDropIn extends Component {
       }.bind(this))
     }
     script.onerror = () => {
-      throw new Error('Hyperwallet SDK could not be loaded.')
+      this.setState({isError: true})
+      onError()
     }
 
     document.body.appendChild(script)

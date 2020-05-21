@@ -27,6 +27,10 @@ class Example extends Component {
         onComplete = {(trmObject, completionResult)=>{
           //logic to be executed on completion of setting up transfer method.
         }}
+        onError = {() => {
+          // handle error
+        }}
+        template = 'Specifies the drop-in UI template. Allowed values are:bootstrap3|plain'
       />
     )
   }
